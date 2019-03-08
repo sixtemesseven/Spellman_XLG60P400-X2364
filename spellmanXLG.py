@@ -10,18 +10,21 @@ import serial
 import time
 
 #Set xlg serial
-xlg = serial.Serial('COM16', baudrate=9600, timeout=1)
+xlg = serial.Serial('COM17', baudrate=9600, timeout=1)
 
 #Calculate checksum
 def generateCSUM(arg):
     buf = 0
     for i in range(len(arg)):
         buf += ord(arg[i])
+    print(format(buf, 'x'))
+    buf = buf % 0x100
     check = str(format(buf, 'x'))
-    check = check[len(check)-2]+check[len(check)-1]
+    if(len(check) == 1):
+        check = '0'+check
     return(check)
 
-#Set XLG
+# Set XLG
 def setXLG(voltage, current, HV_ON):
     if(voltage >= 0 and voltage <= 60000):
         vHex = str(format(int(4095 * (voltage/60000)), 'x'))
@@ -42,10 +45,10 @@ def setXLG(voltage, current, HV_ON):
     if(HV_ON == False):
         status = str(0b0100)
     command = ('S'+vHex+cHex+'000000'+status)
-    print(command)
     checksum = generateCSUM(command)
     commandString = ('\1'+command+checksum+'\r')
     xlg.write(commandString.encode())
+    print(xlg.readline())
     return()
   
 #Reads the status of the XLG
@@ -81,8 +84,8 @@ def getXLG():
         print("ERROR: No valid data packet received...")
         return()
     #Read measured current and voltage    
-    xlgStatus["voltage"] = int(int(answer[1:4],16) / 1022 * 60000)
-    xlgStatus["current"] = (int(answer[4:6],16) / 1022 * 0.015)
+    xlgStatus["voltage"] = int(int(answer[1:4],16) / 1023 * 60000)
+    xlgStatus["current"] = (int(answer[4:7],16) / 1023 * 0.015)
     #Get Status bits
     byte11 = int(answer[11])
     byte12 = int(answer[12])
@@ -98,7 +101,7 @@ def getXLG():
     if(byte12 & 0b0001):
         xlgStatus["coolingError"]=True
     if(byte12 & 0b0010):
-        xlgStatus["overCurrent"]=True       
+        xlgStatus["overCurrent"]=True        
     if(byte12 & 0b1000):
         xlgStatus["overVoltage"]=True        
     if(byte13 & 0b0001):
@@ -107,12 +110,19 @@ def getXLG():
     return(xlgStatus)
 
 setXLG(60000,0.015,True)  
-print(getXLG())
-time.sleep(10)
+
+'''
+setXLG(50,0.0001,True)  
+while(True):
+    time.sleep(.5)
+    print(getXLG())
+    if(input() == 'x'):
+        break
+    
 setXLG(0,0,False)  
-print(getXLG())
+
 xlg.close()
- 
+ '''
 
     
     
