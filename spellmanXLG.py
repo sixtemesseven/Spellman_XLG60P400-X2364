@@ -9,15 +9,18 @@ Generate CSUM according to spellman documents
 import serial
 import time
 
+#Enable Disable Simulation of Instrument
+sim = True
+
 #Set xlg serial
-xlg = serial.Serial('COM17', baudrate=9600, timeout=1)
+if sim == False:
+    xlg = serial.Serial('COM17', baudrate=9600, timeout=1)
 
 #Calculate checksum
 def generateCSUM(arg):
     buf = 0
     for i in range(len(arg)):
         buf += ord(arg[i])
-    print(format(buf, 'x'))
     buf = buf % 0x100
     check = str(format(buf, 'x'))
     if(len(check) == 1):
@@ -27,14 +30,12 @@ def generateCSUM(arg):
 # Set XLG
 def setXLG(voltage, current, HV_ON):
     if(voltage >= 0 and voltage <= 60000):
-        vHex = str(format(int(4095 * (voltage/60000)), 'x'))
-        vHex = vHex.rjust(3, '0')
+        vHex = "%0.3X" % int(4095 * (voltage/60000))
     else:
         print('ERROR: voltage out of range: 0-60000[V]')
         return
     if(current >= 0 and current <= 0.015):
-        cHex = str(format(int(4095 * (current/0.015)), 'x'))
-        cHex = cHex.rjust(3, '0')
+        cHex = "%0.3X" % int(4095 * (current/0.015))     
     else:
         print('ERROR: current out of range: 0-0.015[A]')
         return
@@ -47,13 +48,16 @@ def setXLG(voltage, current, HV_ON):
     command = ('S'+vHex+cHex+'000000'+status)
     checksum = generateCSUM(command)
     commandString = ('\1'+command+checksum+'\r')
-    xlg.write(commandString.encode())
-    print(xlg.readline())
+    if sim == False:
+        xlg.write(commandString.encode())
+    if sim == True:
+        print(commandString)
+        print(commandString.encode())
     return()
   
 #Reads the status of the XLG
 #Returns lexicon
-def getXLG():
+def getXLG(debug=''):
     #Status Lexicon
     xlgStatus = {
             "voltage":              0,
@@ -71,11 +75,14 @@ def getXLG():
     dataValid = False
     for i in range(10):
         time.sleep(.5)
-        xlg.flushInput()
-        time.sleep(.5)
-        request = ('\1'+'Q51\r').encode()
-        xlg.write(request)
-        answer = xlg.readline().decode()
+        if sim == False:
+            xlg.flushInput()
+            time.sleep(.5)
+            request = ('\1'+'Q51\r').encode()
+            xlg.write(request)
+            answer = xlg.readline().decode()
+        if sim == True:
+            answer = debug
         if(1):#int(generateCSUM(answer[1:13])) is int(answer[13:])):
             dataValid = True
             break
@@ -109,12 +116,15 @@ def getXLG():
     #return lexicon
     return(xlgStatus)
 
-setXLG(60000,0.015,True)  
+
+setXLG(33000, 0.00375, True)
+
+
 
 '''
-setXLG(50,0.0001,True)  
+setXLG(56000,0.0002,True)  
 while(True):
-    time.sleep(.5)
+    time.sleep(1)
     print(getXLG())
     if(input() == 'x'):
         break
@@ -122,7 +132,7 @@ while(True):
 setXLG(0,0,False)  
 
 xlg.close()
- '''
+'''
 
     
     
