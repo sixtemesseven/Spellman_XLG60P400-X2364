@@ -270,7 +270,7 @@
       <x>10</x>
       <y>20</y>
       <width>361</width>
-      <height>41</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -281,7 +281,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Spellemann XLG HV Supply</string>
+     <string>Spellmann XLG</string>
     </property>
    </widget>
    <widget class="QPushButton" name="regulationError">
@@ -298,6 +298,26 @@
     </property>
     <property name="text">
      <string>Regulation</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>40</y>
+      <width>361</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>HV Power Supply</string>
     </property>
    </widget>
   </widget>

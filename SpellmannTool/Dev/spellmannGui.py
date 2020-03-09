@@ -60,7 +60,7 @@ class MainWindow(TemplateBaseClass):
         #Qtimer to update gui 
         timer = QtCore.QTimer(self)
         timer.timeout.connect(self.getXLR)
-        timer.start(500)
+        timer.start(1000)
 
         
     def setPort(self):
@@ -84,39 +84,40 @@ class MainWindow(TemplateBaseClass):
         v = status["voltage"]
         c = status["current"]
         self.ui.dVoltage.display(v)
+       
         self.ui.dCurrent.display(c)
         
         #Errors
         if status["arcError"] is True:
-            self.ui.dArc.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.dArc.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.dArc.setStyleSheet("background-color: rgb(106,235,43)")
         if status["InterlockError"] is True:
-            self.ui.dInterlock.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.dInterlock.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.dInterlock.setStyleSheet("background-color: rgb(106,235,43)")
         if status["regulationError"] is True:
-            self.ui.regulationError.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.regulationError.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.regulationError.setStyleSheet("background-color: rgb(106,235,43)")
         if status["tempError"] is True:
-            self.ui.tempError.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.tempError.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.tempError.setStyleSheet("background-color: rgb(106,235,43)")
         if status["coolingError"] is True:
-            self.ui.coolingError.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.coolingError.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.coolingError.setStyleSheet("background-color: 106,235,43)")           
         if status["overCurrent"] is True:
-            self.ui.overCurrent.setStyleSheet("background-color: rgb(170,1,2)0")
+            self.ui.overCurrent.setStyleSheet("background-color: rgb(235,1,2)0")
         else:
             self.ui.overCurrent.setStyleSheet("background-color: rgb(106,235,43)")          
         if status["overVoltage"] is True:
-            self.ui.overVoltage.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.overVoltage.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.overVoltage.setStyleSheet("background-color: rgb(106,235,43)")       
         if status["remote"] is False:
-            self.ui.remote.setStyleSheet("background-color: rgb(170,1,20)")
+            self.ui.remote.setStyleSheet("background-color: rgb(235,1,20)")
         else:
             self.ui.remote.setStyleSheet("background-color: rgb(106,235,43)")
 
