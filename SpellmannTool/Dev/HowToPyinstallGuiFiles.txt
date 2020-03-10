@@ -1,0 +1,8 @@
+Pyinstaller installed via anaconda
+
+command: D:\Github\SpellmannHV\SpellmannTool\Dev>pyinstaller --onefile --windowed --hidden-import pkg_resources.py2_warn spellmanGui.py
+
+Notes:
+
+1. The ui file MUST be in the exe directory...
+2. Use abs. path for ui file

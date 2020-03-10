@@ -21,7 +21,11 @@ class xlg():
         self.xlg.close()
         
     def connectPort(self, port):
-        self.xlg = serial.Serial('COM'+str(port), baudrate=9600, timeout=1)
+        try:
+            self.xlg = serial.Serial('COM'+str(port), baudrate=9600, timeout=1)
+            return(True)
+        except(OSError, serial.SerialException):
+            return(False)
 
     #Calculate checksum
     def generateCSUM(self, arg):
